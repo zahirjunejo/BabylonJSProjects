@@ -1,24 +1,7 @@
-     
-
         var canvas = document.getElementById("renderCanvas");
         var engine = new BABYLON.Engine(canvas, true);
+		var ballSpeed = 0.05;
 
-		function SetupSkyBox(scene){
-			    
-				// Skybox
-				var skybox = BABYLON.Mesh.CreateBox("skybox", 100.0, scene);
-				var myskyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
-				myskyboxMaterial.backFaceCulling = false;
-				myskyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skyTron/skybox",scene);
-				myskyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-				myskyboxMaterial.diffuseColor = new BABYLON.Color3(0,0,0);
-				myskyboxMaterial.specularColor = new BABYLON.Color3(0,0,0);
-				myskyboxMaterial.disableLighting = true;
-				skybox.material = myskyboxMaterial;
-				
-				return skybox;
-		}
-		
         var MainScene = function () {
 		
 	        // This creates a basic Babylon Scene object (non-mesh)
@@ -26,14 +9,72 @@
 	                
 	        // This creates and positions a free camera (non-mesh)
 	        var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0, -20), scene);
-	        camera.attachControl(canvas);                                            
-	        // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
-	        var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-	                
-	        // Default intensity is 1. Let's dim the light a small amount
-	        light.intensity = 0.7;
-			var skybox = SetupSkyBox(scene);
-		    
+	        camera.attachControl(canvas);
+
+            var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
+            
+            //Setup the bat for the scene. Dont know what else to call it.
+	        var bat = BABYLON.Mesh.CreateBox("bat", 0.5, scene);
+            bat.scaling.x = 5.0;
+            bat.position.y = -5.0;
+
+            //Setup the ball
+            var ball = BABYLON.Mesh.CreateSphere("ball", 5, 0.5,scene);
+            ball.position.y = -4.0;
+
+            //Setup the walls
+            // Top Wall
+            var topWall = BABYLON.Mesh.CreateBox("topWall", 0.5, scene);
+            topWall.position.y = 6.0;
+            topWall.scaling.x = 25.0;
+
+            // Left Wall
+            var leftWall = BABYLON.Mesh.CreateBox("leftWall", 0.5, scene);
+            leftWall.position.x = -6.0;
+            leftWall.position.y = 1.0;
+            leftWall.scaling.y = 20.0;
+
+
+            // Right Wall
+            var rightWall = BABYLON.Mesh.CreateBox("rightWall", 0.5, scene);
+            rightWall.position.x = 6.0;
+            rightWall.position.y = 1.0;
+            rightWall.scaling.y = 20.0;
+
+            var enemy1 = BABYLON.Mesh.CreateBox("enemy1", 1.0, scene);
+            enemy1.position.x = -3.0;
+            enemy1.position.y = 3.0;
+            
+            var enemy2 = BABYLON.Mesh.CreateBox("enemy2", 1.0, scene);
+            enemy2.position.x = 0.0;
+            enemy2.position.y = 3.0;
+
+            var enemy3 = BABYLON.Mesh.CreateBox("enemy3", 1.0, scene);
+            enemy3.position.x = 3.0;
+            enemy3.position.y = 3.0;
+
+            var enemy4 = BABYLON.Mesh.CreateBox("enemy4", 1.0, scene);
+            enemy4.position.x = -3.0;
+            enemy4.position.y = 0.0;
+            
+            var enemy5 = BABYLON.Mesh.CreateBox("enemy5", 1.0, scene);
+            enemy5.position.x = 0.0;
+            enemy5.position.y = 0.0;
+
+            var enemy6 = BABYLON.Mesh.CreateBox("enemy6", 1.0, scene);
+            enemy6.position.x = 3.0;
+            enemy6.position.y = 0.0;
+
+            scene.registerBeforeRender(function(){
+
+            	ball.position.x += ballSpeed;
+            	ball.position.y += ballSpeed;
+
+
+            });
+
+
+
 		    return scene;
         };
         
