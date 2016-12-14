@@ -1,6 +1,10 @@
         var canvas = document.getElementById("renderCanvas");
         var engine = new BABYLON.Engine(canvas, true);
-		var ballSpeed = 0.05;
+        var initBallSpeed = 0.05;
+		var ballSpeed = initBallSpeed;
+		var xDirection = 1;
+		var yDirection = 1;
+		var keyState = {};
 
         var MainScene = function () {
 		
@@ -9,8 +13,7 @@
 	                
 	        // This creates and positions a free camera (non-mesh)
 	        var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0, -20), scene);
-	        camera.attachControl(canvas);
-
+            //camera.attachControl(canvas, true);
             var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
             
             //Setup the bat for the scene. Dont know what else to call it.
@@ -18,9 +21,27 @@
             bat.scaling.x = 5.0;
             bat.position.y = -5.0;
 
+
             //Setup the ball
             var ball = BABYLON.Mesh.CreateSphere("ball", 5, 0.5,scene);
             ball.position.y = -4.0;
+
+            //Register keypress actions with the ball
+            scene.actionManager = new BABYLON.ActionManager(scene);
+
+            window.addEventListener('keydown',function(e){
+			    keyState[e.keyCode || e.which] = true;
+			},true);
+
+			window.addEventListener('keyup',function(e){
+			    keyState[e.keyCode || e.which] = false;
+			},true);
+
+      //       scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+      //       	BABYLON.ActionManager.OnEveryFrameTrigger,
+					 //  function (evt) {
+				
+		    // }));
 
             //Setup the walls
             // Top Wall
@@ -33,7 +54,6 @@
             leftWall.position.x = -6.0;
             leftWall.position.y = 1.0;
             leftWall.scaling.y = 20.0;
-
 
             // Right Wall
             var rightWall = BABYLON.Mesh.CreateBox("rightWall", 0.5, scene);
@@ -66,14 +86,44 @@
             enemy6.position.y = 0.0;
 
             scene.registerBeforeRender(function(){
+               
+            	ball.position.x += ballSpeed * xDirection;
+            	ball.position.y += ballSpeed * yDirection;
+                
+                if(ball.position.y < -7){
+                	ball.position.y = bat.position.y + 1;
+                	ball.position.x = bat.position.x;
+                	ballSpeed = initBallSpeed;
+                	xDirection = yDirection = 1;
+                }
+         
+            	if(ball.intersectsMesh(rightWall, true)){
+              		 xDirection = -1;
+            	}
 
-            	ball.position.x += ballSpeed;
-            	ball.position.y += ballSpeed;
+ 	            if(ball.intersectsMesh(leftWall, true)){    
+            		 xDirection = 1;
+            	}
+            	
+            	if(ball.intersectsMesh(topWall, true)){
+            		 yDirection = -1;
+            	}
 
+            	if(ball.intersectsMesh(bat, true)){
+            		 yDirection = 1;
+            		 if(ballSpeed <= 0.25)
+            		 ballSpeed+=0.01;
+            	}
+
+ 				if (keyState[37] || keyState[65]){
+				     bat.position.x-=ballSpeed*2;
+				}    
+
+				if (keyState[39] || keyState[68]){
+				     bat.position.x+=ballSpeed*2;
+				}
 
             });
-
-
 
 		    return scene;
         };
