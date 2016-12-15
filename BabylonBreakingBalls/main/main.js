@@ -3,8 +3,26 @@
         var initBallSpeed = 0.05;
 		var ballSpeed = initBallSpeed;
 		var xDirection = 1;
-		var yDirection = 1;
+		var yDirection = 1; 
 		var keyState = {};
+		var blockCount = 0;
+
+
+		var SetupBoard = function(scene){ 
+
+			for(i=0;i<10;i+=2){
+				for(j=0;j<6;j+=2){
+
+			        var enemy = BABYLON.Mesh.CreateBox("enemy" + i + "" + j, 
+			        	              1.0, scene);
+			        enemy.position.x = i - 4;
+			        enemy.position.y = j;
+                    blockCount++;
+				}
+			}
+
+
+		};
 
         var MainScene = function () {
 		
@@ -21,10 +39,10 @@
             bat.scaling.x = 5.0;
             bat.position.y = -5.0;
 
-
             //Setup the ball
             var ball = BABYLON.Mesh.CreateSphere("ball", 5, 0.5,scene);
-            ball.position.y = -4.0;
+            ball.position.y = bat.position.y + 1;
+            ball.position.x = bat.position.x;
 
             //Register keypress actions with the ball
             scene.actionManager = new BABYLON.ActionManager(scene);
@@ -53,39 +71,17 @@
             var leftWall = BABYLON.Mesh.CreateBox("leftWall", 0.5, scene);
             leftWall.position.x = -6.0;
             leftWall.position.y = 1.0;
-            leftWall.scaling.y = 20.0;
+            leftWall.scaling.y = 25.0;
 
             // Right Wall
             var rightWall = BABYLON.Mesh.CreateBox("rightWall", 0.5, scene);
             rightWall.position.x = 6.0;
             rightWall.position.y = 1.0;
-            rightWall.scaling.y = 20.0;
+            rightWall.scaling.y = 25.0;
 
-            var enemy1 = BABYLON.Mesh.CreateBox("enemy1", 1.0, scene);
-            enemy1.position.x = -3.0;
-            enemy1.position.y = 3.0;
-            
-            var enemy2 = BABYLON.Mesh.CreateBox("enemy2", 1.0, scene);
-            enemy2.position.x = 0.0;
-            enemy2.position.y = 3.0;
+            SetupBoard(scene);
 
-            var enemy3 = BABYLON.Mesh.CreateBox("enemy3", 1.0, scene);
-            enemy3.position.x = 3.0;
-            enemy3.position.y = 3.0;
-
-            var enemy4 = BABYLON.Mesh.CreateBox("enemy4", 1.0, scene);
-            enemy4.position.x = -3.0;
-            enemy4.position.y = 0.0;
-            
-            var enemy5 = BABYLON.Mesh.CreateBox("enemy5", 1.0, scene);
-            enemy5.position.x = 0.0;
-            enemy5.position.y = 0.0;
-
-            var enemy6 = BABYLON.Mesh.CreateBox("enemy6", 1.0, scene);
-            enemy6.position.x = 3.0;
-            enemy6.position.y = 0.0;
-
-            scene.registerBeforeRender(function(){
+            scene.registerAfterRender(function(){
                
             	ball.position.x += ballSpeed * xDirection;
             	ball.position.y += ballSpeed * yDirection;
@@ -96,24 +92,52 @@
                 	ballSpeed = initBallSpeed;
                 	xDirection = yDirection = 1;
                 }
-         
+
+
+
             	if(ball.intersectsMesh(rightWall, true)){
-              		 xDirection = -1;
+              		xDirection = -1;
             	}
 
  	            if(ball.intersectsMesh(leftWall, true)){    
-            		 xDirection = 1;
+            		xDirection = 1;
             	}
             	
             	if(ball.intersectsMesh(topWall, true)){
-            		 yDirection = -1;
+            		yDirection = -1;
             	}
 
             	if(ball.intersectsMesh(bat, true)){
             		 yDirection = 1;
-            		 if(ballSpeed <= 0.25)
-            		 ballSpeed+=0.01;
+
+	            	 if(blockCount <= 0){
+	                     SetupBoard(scene);
+	                 }
+
+            		 if(ballSpeed <= 0.25){
+            		     ballSpeed+=0.01;
+            		 }
+
             	}
+                
+
+				for(i=0;i<10;i+=2){
+					for(j=0;j<6;j+=2){
+
+				        var testMesh = scene.getMeshByName("enemy" + i + "" + j);
+
+		                if(testMesh && !testMesh.isDisposed() && 
+		                	ball.intersectsMesh(testMesh, false))
+						{  
+		                   xDirection *= -1;
+		                   yDirection *= -1;
+		                   testMesh.dispose();
+		                   blockCount--;
+						}
+
+					}
+				}
+
 
  				if (keyState[37] || keyState[65]){
 				     bat.position.x-=ballSpeed*2;
@@ -122,6 +146,7 @@
 				if (keyState[39] || keyState[68]){
 				     bat.position.x+=ballSpeed*2;
 				}
+
 
             });
 
