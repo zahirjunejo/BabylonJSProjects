@@ -11,9 +11,7 @@
 	          
             
             var startScreen = new BABYLON.ScreenSpaceCanvas2D(scene, { 
-                              id: "ScreenCanvas",  backgroundFill: "#0061ffff",
-                              backgroundRoundRadius: 10, width: window.innerWidth,
-                              height:window.innerHeight});
+                              id: "ScreenCanvas"});
     
             var score1 = new BABYLON.Rectangle2D(
             {

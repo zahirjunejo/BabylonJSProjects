@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
-    <head>
+<head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
         <title>Breaking Balls</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
         <!-- Babylon.js -->
         <script src="http://www.babylonjs.com/hand.minified-1.2.js"></script>
         <script src="../../../Babylon.js-2.4.0/dist/babylon.2.4.js"></script>
@@ -23,9 +27,48 @@
                 height: 100%;
                 touch-action: none;
             }
+
+          .modal-header, h4, .close {
+              background-color: #5cb85c;
+              color:white !important;
+              text-align: center;
+              font-size: 30px;
+          }
+          .modal-footer {
+              background-color: #f9f9f9;
+          }
+
         </style>
-    </head>
+</head>
 <body>
+
+
+    <div class="container">
+          <!-- Modal -->
+          <div class="modal fade" id="GameOverDialog" role="dialog">
+            <div class="modal-dialog">
+            
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                  <h4><span class="glyphicon"></span> Game Over</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+
+                  <button onclick="Restart()" class="btn btn-success btn-block"><span class="glyphicon glyphicon-repeat"></span> Restart</button>
+
+                  <button onclick="Quit()" class="btn btn-success btn-block"><span class="glyphicon glyphicon-log-out"></span> Quit</button>
+                
+                </div>
+              </div>
+              
+            </div>
+          </div> 
+    </div>
+
+
+
+
     <canvas id="renderCanvas"></canvas>
     <script src="main.js"></script>
 </body>
