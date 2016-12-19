@@ -34,6 +34,7 @@
         };
         
         var scene = StartScene();
+        scene.clearColor = new BABYLON.Color3( 0.0, 0.0, 0.0);
 
         engine.runRenderLoop(function () {
             scene.render();
