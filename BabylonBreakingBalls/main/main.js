@@ -61,11 +61,11 @@ var MainScene = function () {
 
     window.addEventListener('keydown',function(e){
 	    keyState[e.keyCode || e.which] = true;
-	},true);
+   },true);
 
-	window.addEventListener('keyup',function(e){
-	    keyState[e.keyCode || e.which] = false;
-	},true);
+  	window.addEventListener('keyup',function(e){
+  	    keyState[e.keyCode || e.which] = false;
+  	},true);
 
 //       scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
 //       	BABYLON.ActionManager.OnEveryFrameTrigger,
@@ -95,8 +95,6 @@ var MainScene = function () {
 
     // TODO: Setup the GUI here
     var gameGUI = new BABYLON.ScreenSpaceCanvas2D(scene, { id: "gameGUI"});
-    
-
     // Quit button
     var quitButton = new BABYLON.Rectangle2D(
     {

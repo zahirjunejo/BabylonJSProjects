@@ -1,4 +1,4 @@
-function SetEnvironment(scene){
+SetEnvironment = (scene) => {
     
     let sun = new BABYLON.PointLight("Omni", new BABYLON.Vector3(0, 1000, 0), scene);
 
