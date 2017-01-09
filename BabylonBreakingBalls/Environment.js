@@ -1,6 +1,7 @@
 SetEnvironment = (scene) => {
     
     let sun = new BABYLON.PointLight("Omni", new BABYLON.Vector3(0, 1000, 0), scene);
+    var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
 
     let skybox = BABYLON.Mesh.CreateSphere("skybox", 10, 2000, scene);
     let skyMaterial = new BABYLON.SkyMaterial("skyMaterial",scene);
@@ -17,7 +18,9 @@ SetEnvironment = (scene) => {
     let water = BABYLON.Mesh.CreateGround("water",5000, 5000, 1, scene, false);
     let waterMaterial = new BABYLON.StandardMaterial("waterMaterial", scene);
     waterMaterial.diffuseTexture = new BABYLON.Texture(waterTextureUrl, scene);
-    waterMaterial.diffuseTexture.uScale = waterMaterial.diffuseTexture.vScale = 500;
+    waterMaterial.diffuseTexture.uScale = waterMaterial.diffuseTexture.vScale = 50;
+    waterBumpMapUrl = "https://www.filterforge.com/filters/940-bump.jpg";
+    waterMaterial.bumpTexture = new BABYLON.Texture(waterBumpMapUrl, scene);
     water.position.y = -5.0;
     water.material = waterMaterial;
 

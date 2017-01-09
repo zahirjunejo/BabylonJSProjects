@@ -45,7 +45,6 @@ var MainScene = function () {
     var camera = new BABYLON.FreeCamera("camera1", 
                    new BABYLON.Vector3(0, 0, -18), scene);
     //camera.attachControl(canvas, true);
-    var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
     
     let woodMaterial = new BABYLON.StandardMaterial("woodMaterial",scene);
     let woodTextureUrl = "https://static.vecteezy.com/system/resources/previews/000/094/777/original/free-wood-texture-vector.jpg";
@@ -162,7 +161,7 @@ var MainScene = function () {
         
       if(ball.position.y < -7){
           if(blockCount <= 0){
-            SetupBoard(scene);
+            SetupBoard(scene, woodMaterial);
           }
           lives--;
           livesText.children[0].text = "Lives: " + lives;
