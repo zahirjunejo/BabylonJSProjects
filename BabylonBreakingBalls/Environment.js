@@ -15,10 +15,10 @@ SetEnvironment = (scene) => {
     //Ground
     var waterTextureUrl = "http://1.bp.blogspot.com/-MwXleupp6FM/UHU5pF4jYjI/AAAAAAAADcA/OXjgoPBpy8Y/s1600/Tileable+classic+water+texture.jpg";
     let water = BABYLON.Mesh.CreateGround("water",5000, 5000, 1, scene, false);
-    let waterMaterial = new BABYLON.StandardMaterial("water", scene);
+    let waterMaterial = new BABYLON.StandardMaterial("waterMaterial", scene);
     waterMaterial.diffuseTexture = new BABYLON.Texture(waterTextureUrl, scene);
     waterMaterial.diffuseTexture.uScale = waterMaterial.diffuseTexture.vScale = 500;
     water.position.y = -5.0;
     water.material = waterMaterial;
-    
+
 }

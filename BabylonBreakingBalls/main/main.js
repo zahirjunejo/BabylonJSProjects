@@ -19,16 +19,15 @@ var Quit = function(){
     window.location.replace("../start/index.html");
 }
 
-var SetupBoard = function(scene){ 
+var SetupBoard = function(scene, blockMaterial){ 
 
 	for(i=0;i<10;i+=2){
 		for(j=0;j<6;j+=2){
-
-	        var enemy = BABYLON.Mesh.CreateBox("enemy" + i + "" + j, 
-	        	              1.0, scene);
-	        enemy.position.x = i - 4;
-	        enemy.position.y = j;
-            blockCount++;
+    var enemy = BABYLON.Mesh.CreateBox("enemy" + i + "" + j, 1.0, scene);
+    enemy.material = blockMaterial;
+    enemy.position.x = i - 4;
+    enemy.position.y = j;
+    blockCount++;
 		}
 	}
 
@@ -39,22 +38,31 @@ var MainScene = function () {
 
     // This creates a basic Babylon Scene object (non-mesh)
     var scene = new BABYLON.Scene(engine);
-            
+    
+    SetEnvironment(scene);
+
     // This creates and positions a free camera (non-mesh)
     var camera = new BABYLON.FreeCamera("camera1", 
                    new BABYLON.Vector3(0, 0, -18), scene);
     //camera.attachControl(canvas, true);
     var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
     
+    let woodMaterial = new BABYLON.StandardMaterial("woodMaterial",scene);
+    let woodTextureUrl = "https://static.vecteezy.com/system/resources/previews/000/094/777/original/free-wood-texture-vector.jpg";
+    woodMaterial.diffuseTexture = new BABYLON.Texture(woodTextureUrl, scene);
+
     //Setup the bat for the scene. Dont know what else to call it.
     var bat = BABYLON.Mesh.CreateBox("bat", 0.5, scene);
     bat.scaling.x = 5.0;
     bat.position.y = -5.0;
+    bat.material = woodMaterial;
+
 
     //Setup the ball
     var ball = BABYLON.Mesh.CreateSphere("ball", 5, 0.5,scene);
     ball.position.y = bat.position.y + 1;
     ball.position.x = bat.position.x;
+    ball.material = woodMaterial;
 
     //Register keypress actions with the ball
     scene.actionManager = new BABYLON.ActionManager(scene);
@@ -67,31 +75,28 @@ var MainScene = function () {
   	    keyState[e.keyCode || e.which] = false;
   	},true);
 
-//       scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
-//       	BABYLON.ActionManager.OnEveryFrameTrigger,
-			 //  function (evt) {
-		
-    // }));
-
     //Setup the walls
     // Top Wall
     var topWall = BABYLON.Mesh.CreateBox("topWall", 0.5, scene);
     topWall.position.y = 6.0;
     topWall.scaling.x = 25.0;
+    topWall.material = woodMaterial;
 
     // Left Wall
     var leftWall = BABYLON.Mesh.CreateBox("leftWall", 0.5, scene);
     leftWall.position.x = -6.0;
     leftWall.position.y = 1.0;
     leftWall.scaling.y = 25.0;
+    leftWall.material = woodMaterial;
 
     // Right Wall
     var rightWall = BABYLON.Mesh.CreateBox("rightWall", 0.5, scene);
     rightWall.position.x = 6.0;
     rightWall.position.y = 1.0;
     rightWall.scaling.y = 25.0;
+    rightWall.material = woodMaterial;
 
-    SetupBoard(scene);
+    SetupBoard(scene, woodMaterial);
 
     // TODO: Setup the GUI here
     var gameGUI = new BABYLON.ScreenSpaceCanvas2D(scene, { id: "gameGUI"});
@@ -152,17 +157,17 @@ var MainScene = function () {
     	ball.position.x += ballSpeed * xDirection;
     	ball.position.y += ballSpeed * yDirection;
         
-        if(ball.position.y < -7){
-            if(blockCount <= 0){
-              SetupBoard(scene);
-            }
-            lives--;
-            livesText.children[0].text = "Lives: " + lives;
-        	ball.position.y = bat.position.y + 1;
-        	ball.position.x = bat.position.x;
-        	ballSpeed = initBallSpeed;
-        	xDirection = yDirection = 1;
-        }
+      if(ball.position.y < -7){
+          if(blockCount <= 0){
+            SetupBoard(scene);
+          }
+          lives--;
+          livesText.children[0].text = "Lives: " + lives;
+      	ball.position.y = bat.position.y + 1;
+      	ball.position.x = bat.position.x;
+      	ballSpeed = initBallSpeed;
+      	xDirection = yDirection = 1;
+      }
 
 
 
@@ -170,7 +175,7 @@ var MainScene = function () {
       		xDirection = -1;
     	}
 
-            if(ball.intersectsMesh(leftWall, true)){    
+      if(ball.intersectsMesh(leftWall, true)){    
     		xDirection = 1;
     	}
     	
@@ -191,7 +196,7 @@ var MainScene = function () {
 
     	}
         
-        // Handling collision with the blocks
+    // Handling collision with the blocks
 		for(i=0;i<10;i+=2){
 			for(j=0;j<6;j+=2){
 
@@ -239,7 +244,6 @@ var MainScene = function () {
 
 var scene = MainScene();
 scene.clearColor = new BABYLON.Color3( 0.0, 0.0, 0.0);
-SetEnvironment(scene);
 engine.runRenderLoop(function () {
     scene.render();
 });
