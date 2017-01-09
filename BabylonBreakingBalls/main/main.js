@@ -50,6 +50,9 @@ var MainScene = function () {
     let woodMaterial = new BABYLON.StandardMaterial("woodMaterial",scene);
     let woodTextureUrl = "https://static.vecteezy.com/system/resources/previews/000/094/777/original/free-wood-texture-vector.jpg";
     woodMaterial.diffuseTexture = new BABYLON.Texture(woodTextureUrl, scene);
+    woodMaterial.diffuseTexture.vScale = 10;
+    let woodBumpTextureUrl = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTSOgwU4zgnopSkdQ3w-mEKqgccZNsgPpEKGBe4d9YhW3enPSFA";
+    woodMaterial.bumpTexture = new BABYLON.Texture(woodBumpTextureUrl, scene);
 
     //Setup the bat for the scene. Dont know what else to call it.
     var bat = BABYLON.Mesh.CreateBox("bat", 0.5, scene);
@@ -186,9 +189,9 @@ var MainScene = function () {
     	if(ball.intersectsMesh(bat, true)){
     		 yDirection = 1;
 
-        	 if(blockCount <= 0){
-                 SetupBoard(scene);
-             }
+      	 if(blockCount <= 0){
+             SetupBoard(scene, woodMaterial);
+         }
 
     		 if(ballSpeed <= 0.25){
     		     ballSpeed+=0.01;
